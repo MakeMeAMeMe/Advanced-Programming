@@ -1,4 +1,6 @@
 #include "./linked_list.h"
+
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -19,27 +21,86 @@ uint32_t _linked_list_insert_end(LinkedList *linked_list, LinkedListNode *node);
 LinkedListNode *find_linked_list_from_end(LinkedList *linked_list, uint64_t position);
 LinkedListNode *find_linked_list_from_begin(LinkedList *linked_list, uint64_t position);
 LinkedListNode *_find_linked_list(LinkedList *linked_list, uint64_t position);
+uint32_t _linked_list_insert(LinkedList *linked_list, LinkedListNode *node, uint64_t position);
 
 LinkedList *new_linked_list() {
     LinkedList *linked_list = (LinkedList *)malloc(sizeof(LinkedList));
+    if (linked_list == NULL) {
+        return NULL;
+    };
     linked_list->length = 0;
     linked_list->begin = NULL;
     linked_list->end = NULL;
     return linked_list;
 }
 
-LinkedListNode *new_linked_list_node(uint64_t data_size) {
+LinkedListNode *new_linked_list_node(void *data, uint64_t data_size) {
     LinkedListNode *node = (LinkedListNode *)malloc(sizeof(LinkedListNode));
+    if (node == NULL) {
+        return NULL;
+    }
     node->data = (void *)malloc(data_size);
+    if (node->data == NULL) {
+        free(node);
+        return NULL;
+    }
+    memcpy(node->data, &data, data_size);
     node->next = NULL;
     node->previous = NULL;
     return node;
 }
 
 uint32_t linked_list_insert_begin(LinkedList *linked_list, void *data, uint64_t data_size) {
-    LinkedListNode *node = new_linked_list_node(data_size);
-    memcpy_s(node->data, data_size, data, data_size);
+    LinkedListNode *node = new_linked_list_node(data, data_size);
+    if (node == NULL) {
+        return 1;
+    }
     return _linked_list_insert_begin(linked_list, node);
+}
+
+uint32_t linked_list_insert_end(LinkedList *linked_list, void *data, uint64_t data_size) {
+    LinkedListNode *node = new_linked_list_node(data, data_size);
+    if (node == NULL) {
+        return 1;
+    }
+    return _linked_list_insert_end(linked_list, node);
+}
+
+uint32_t linked_list_insert(LinkedList *linked_list, void *data, uint64_t data_size, uint64_t position) {
+    LinkedListNode *node = new_linked_list_node(data, data_size);
+    if (node == NULL) {
+        return 1;
+    }
+    if (linked_list->length < position) {
+        return 1;
+    }
+    if (position == 0) {
+        return _linked_list_insert_begin(linked_list, node);
+    }
+    if (position == linked_list->length) {
+        return _linked_list_insert_end(linked_list, node);
+    }
+    return _linked_list_insert(linked_list, node, position);
+}
+
+uint32_t _linked_list_insert(LinkedList *linked_list, LinkedListNode *node, uint64_t position) {
+    uint64_t counter = 0;
+    LinkedListNode *aux = linked_list->begin;
+    while (counter++ < position) {
+        aux = aux->next;
+    }
+
+    LinkedListNode *prev = aux->previous;
+    // LinkedListNode* next = aux->next;
+
+    prev->next = node;
+    aux->previous = node;
+    node->previous = prev;
+    node->next = aux;
+
+    linked_list->length++;
+
+    return 0;
 }
 
 uint32_t _linked_list_insert_begin(LinkedList *linked_list, LinkedListNode *node) {
@@ -65,12 +126,6 @@ uint32_t _linked_list_insert_begin(LinkedList *linked_list, LinkedListNode *node
 
     linked_list->length++;
     return 0;
-}
-
-uint32_t linked_list_insert_end(LinkedList *linked_list, void *data, uint64_t data_size) {
-    LinkedListNode *node = new_linked_list_node(data_size);
-    memcpy_s(node->data, data_size, data, data_size);
-    return _linked_list_insert_end(linked_list, node);
 }
 
 uint32_t _linked_list_insert_end(LinkedList *linked_list, LinkedListNode *node) {
@@ -130,12 +185,13 @@ uint32_t linked_list_delete(LinkedList *linked_list, uint64_t position) {
 }
 
 void *find_linked_list(LinkedList *linked_list, uint64_t position) {
-    LinkedListNode *node = find_linked_list(linked_list, position);
+    LinkedListNode *node = _find_linked_list(linked_list, position);
     if (node == NULL) {
         return NULL;
     }
     return node->data;
 }
+
 LinkedListNode *_find_linked_list(LinkedList *linked_list, uint64_t position) {
     if (position > linked_list->length) {
         return find_linked_list_from_end(linked_list, position);

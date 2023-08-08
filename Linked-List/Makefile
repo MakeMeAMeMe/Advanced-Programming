@@ -18,7 +18,7 @@ CFLAGS =
 # C++ flags
 CXXFLAGS = 
 # C/C++ flags
-CPPFLAGS = -Wall
+CPPFLAGS = -Wall -g
 # dependency-generation flags
 DEPFLAGS = -MMD -MP
 # linker flags
