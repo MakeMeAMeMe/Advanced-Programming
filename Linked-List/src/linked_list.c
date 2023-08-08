@@ -67,18 +67,19 @@ uint32_t linked_list_insert_end(LinkedList *linked_list, void *data, uint64_t da
 }
 
 uint32_t linked_list_insert(LinkedList *linked_list, void *data, uint64_t data_size, uint64_t position) {
-    LinkedListNode *node = new_linked_list_node(data, data_size);
-    if (node == NULL) {
-        return 1;
-    }
-    if (linked_list->length < position) {
+    if (position > linked_list->length) {
         return 1;
     }
     if (position == 0) {
-        return _linked_list_insert_begin(linked_list, node);
+        return linked_list_insert_begin(linked_list, data, data_size);
     }
     if (position == linked_list->length) {
-        return _linked_list_insert_end(linked_list, node);
+        return linked_list_insert_end(linked_list, data, data_size);
+    }
+
+    LinkedListNode *node = new_linked_list_node(data, data_size);
+    if (node == NULL) {
+        return 1;
     }
     return _linked_list_insert(linked_list, node, position);
 }
@@ -203,10 +204,7 @@ LinkedListNode *find_linked_list_from_begin(LinkedList *linked_list, uint64_t po
     LinkedListNode *aux = linked_list->begin;
 
     uint64_t counter = 0;
-    while (aux != NULL) {
-        if (counter++ == position) {
-            break;
-        }
+    while (aux != NULL && counter++ == position) {
         aux = aux->next;
     }
     return aux;
@@ -216,10 +214,7 @@ LinkedListNode *find_linked_list_from_end(LinkedList *linked_list, uint64_t posi
     LinkedListNode *aux = linked_list->end;
 
     uint64_t counter = linked_list->length - 1;
-    while (aux != NULL) {
-        if (counter-- == position) {
-            break;
-        }
+    while (aux != NULL && counter-- == position) {
         aux = aux->previous;
     }
     return aux;
