@@ -2,6 +2,13 @@
 
 #include "linked_list.h"
 
+uint8_t comparator(void* search_term, void* data) {
+    if (*((int*)search_term) == *((int*)data)) {
+        return 1;
+    }
+    return 0;
+}
+
 int main(int argc, char const* argv[]) {
     // instantiate a list
     LinkedList* linked_list = new_linked_list();
@@ -14,6 +21,15 @@ int main(int argc, char const* argv[]) {
     // find 2 of them
     for (size_t i = 0; i < 3; i++) {
         int* data = (int*)find_linked_list(linked_list, i);
+        int aux = (int)(*data);
+        printf("Valor %lu: %d\n", i, aux);
+    }
+
+    for (size_t i = 0; i < 3; i++) {
+        int* data = (int*)find_value_linked_list(linked_list, (void*)(i + 1), comparator);
+        if (data == NULL) {
+            continue;
+        }
         int aux = (int)(*data);
         printf("Valor %lu: %d\n", i, aux);
     }

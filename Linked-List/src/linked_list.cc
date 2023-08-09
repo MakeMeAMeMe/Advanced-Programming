@@ -221,6 +221,18 @@ LinkedListNode *find_linked_list_from_end(LinkedList *linked_list, uint64_t posi
     return aux;
 }
 
+void *find_value_linked_list(LinkedList *linked_list, void *data,
+                             uint8_t (*comparator)(void *search_term, void *value)) {
+    LinkedListNode *aux = linked_list->begin;
+    while (aux != NULL) {
+        if (comparator(&data, aux->data)) {
+            return aux->data;
+        }
+        aux = aux->next;
+    }
+    return NULL;
+}
+
 uint64_t clear_linked_list(LinkedList *linked_list) {
     LinkedListNode *aux = linked_list->begin;
     while (aux != NULL) {
