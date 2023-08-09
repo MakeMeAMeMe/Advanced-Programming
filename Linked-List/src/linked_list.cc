@@ -149,6 +149,7 @@ uint32_t _linked_list_insert_end(LinkedList *linked_list, LinkedListNode *node) 
     linked_list->end = node;
 
     aux->next = node;
+    linked_list->length++;
 
     return 0;
 }
@@ -194,7 +195,7 @@ void *find_linked_list(LinkedList *linked_list, uint64_t position) {
 }
 
 LinkedListNode *_find_linked_list(LinkedList *linked_list, uint64_t position) {
-    if (position > linked_list->length) {
+    if (position > linked_list->length / 2) {
         return find_linked_list_from_end(linked_list, position);
     }
     return find_linked_list_from_begin(linked_list, position);
@@ -204,7 +205,7 @@ LinkedListNode *find_linked_list_from_begin(LinkedList *linked_list, uint64_t po
     LinkedListNode *aux = linked_list->begin;
 
     uint64_t counter = 0;
-    while (aux != NULL && counter++ == position) {
+    while (aux != NULL && counter++ < position) {
         aux = aux->next;
     }
     return aux;
@@ -214,8 +215,32 @@ LinkedListNode *find_linked_list_from_end(LinkedList *linked_list, uint64_t posi
     LinkedListNode *aux = linked_list->end;
 
     uint64_t counter = linked_list->length - 1;
-    while (aux != NULL && counter-- == position) {
+    while (aux != NULL && counter-- > position) {
         aux = aux->previous;
     }
     return aux;
+}
+
+uint64_t clear_linked_list(LinkedList *linked_list) {
+    LinkedListNode *aux = linked_list->begin;
+    while (aux != NULL) {
+        LinkedListNode *next = aux->next;
+        free(aux->data);
+        free(aux);
+        aux = next;
+    }
+
+    linked_list->begin = NULL;
+    linked_list->end = NULL;
+    linked_list->length = 0;
+
+    return 0;
+}
+
+uint64_t free_linked_list(LinkedList *linked_list) {
+    if (clear_linked_list(linked_list) != 0) {
+        return 1;
+    }
+    free(linked_list);
+    return 0;
 }

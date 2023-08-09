@@ -13,7 +13,8 @@ int main(int argc, char const* argv[]) {
 
     // find 2 of them
     for (size_t i = 0; i < 3; i++) {
-        int aux = (int)(*(int*)find_linked_list(linked_list, i));
+        int* data = (int*)find_linked_list(linked_list, i);
+        int aux = (int)(*data);
         printf("Valor %lu: %d\n", i, aux);
     }
 
