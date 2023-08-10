@@ -36,7 +36,8 @@ file(GLOB TEST_SRC_FILES
 )
 
 add_executable(LinkedList src/main.cc)
-target_sources(LinkedList PUBLIC ${SRC_FILES})
+add_library(LinkedListLib SHARED ${SRC_FILES})
+target_sources(LinkedList PUBLIC src/linked_list.cc src/linked_list.h)
 
 add_executable(LinkedListTest tests/test_linked_list.cpp)
 target_sources(LinkedListTest PUBLIC src/linked_list.cc src/linked_list.h)
