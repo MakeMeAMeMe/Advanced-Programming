@@ -14,6 +14,7 @@ struct LinkedListNode {
     void *data;
     LinkedListNode *next;
     LinkedListNode *previous;
+    // LinkedListNodeDataType data_type;
 };
 
 uint32_t _linked_list_insert_begin(LinkedList *linked_list, LinkedListNode *node);

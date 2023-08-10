@@ -5,6 +5,8 @@
 typedef struct LinkedList LinkedList;
 typedef struct LinkedListNode LinkedListNode;
 
+// typedef enum LinkedListNodeDataType LinkedListNodeDataType;
+
 LinkedList* new_linked_list();
 uint32_t linked_list_insert_begin(LinkedList*, void*, uint64_t);
 uint32_t linked_list_insert_end(LinkedList*, void*, uint64_t);
