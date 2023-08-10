@@ -13,6 +13,6 @@ uint32_t linked_list_insert_end(LinkedList*, void*, uint64_t);
 uint32_t linked_list_insert(LinkedList*, void*, uint64_t, uint64_t);
 uint32_t linked_list_delete(LinkedList*, uint64_t);
 void* find_linked_list(LinkedList*, uint64_t);
-void* find_value_linked_list(LinkedList*, void*, uint8_t (*f)(void*, void*));
+void* find_value_linked_list(LinkedList*, void*, uint8_t (*comparator)(void*, void*));
 uint64_t clear_linked_list(LinkedList*);
 uint64_t free_linked_list(LinkedList*);

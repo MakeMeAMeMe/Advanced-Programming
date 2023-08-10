@@ -1,4 +1,6 @@
 #pragma once
-#include "../../../Linked-List/src/linked_list.h"
 
-void print_h();
+typedef struct ExpArray ExpArray;
+
+ExpArray* new_exp_array(uint64_t);
+
