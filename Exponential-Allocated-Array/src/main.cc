@@ -8,6 +8,9 @@ int main(int argc, char const* argv[]) {
     int var_3 = -3;
 
     ExpArray* exp_array = new_exp_array(sizeof(int));
+    for (size_t i = 0; i < 100; i++) {
+        exp_array_insert(exp_array, (void*)&i);
+    }
 
     exp_array_insert(exp_array, (void*)&var_3);
     exp_array_insert(exp_array, (void*)&var_2);

@@ -53,17 +53,17 @@ uint32_t exp_array_insert(ExpArray* exp_array, void* data) {
         // alloc first node
         node = new_exp_array_node(exp_array->data_size, 1);
         // add node to ll
-        linked_list_insert_end(exp_array->linked_list, node, sizeof(ExpArrayNode));
+        node = (ExpArrayNode*)linked_list_insert_end(exp_array->linked_list, node, sizeof(ExpArrayNode));
     } else if (node->count >= node->limit) {
         // if node.count == limit
         // alloc new node
         node = new_exp_array_node(exp_array->data_size, 2 * node->limit);
         // add node to ll
-        linked_list_insert_end(exp_array->linked_list, node, sizeof(ExpArrayNode));
+        node = (ExpArrayNode*)linked_list_insert_end(exp_array->linked_list, node, sizeof(ExpArrayNode));
     }
 
     // add item
-    memcpy(node->vector + node->count, data, exp_array->data_size);
+    memcpy(node->vector + (node->count * exp_array->data_size), data, exp_array->data_size);
 
     node->count++;
     // if node.count < limit
