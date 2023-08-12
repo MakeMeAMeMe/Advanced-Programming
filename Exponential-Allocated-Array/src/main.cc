@@ -2,6 +2,11 @@
 
 #include "exp_array/exp_array.h"
 
+void printer(void* data) {
+    int value = (int)*((int*)data);
+    printf("%d ", value);
+}
+
 int main(int argc, char const* argv[]) {
     int var_1 = 1;
     int var_2 = 2;
@@ -16,6 +21,6 @@ int main(int argc, char const* argv[]) {
     exp_array_insert(exp_array, (void*)&var_2);
     exp_array_insert(exp_array, (void*)&var_1);
 
-    exp_array_show(exp_array);
+    exp_array_show(exp_array, printer);
     return 0;
 }

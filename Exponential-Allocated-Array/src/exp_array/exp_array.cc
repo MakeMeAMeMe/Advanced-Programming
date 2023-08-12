@@ -45,33 +45,25 @@ ExpArrayNode* new_exp_array_node(uint64_t data_size, uint64_t limit) {
     }
     return exp_array_node;
 }
-
+#define VECTOR_INITIAL_SIZE 1
+#define VECTOR_GROWTH_COEFFICIENT 2
 uint32_t exp_array_insert(ExpArray* exp_array, void* data) {
     ExpArrayNode* node = (ExpArrayNode*)linked_list_get_end(exp_array->linked_list);
     if (node == NULL) {
-        // if node == NULL, start process
-        // alloc first node
-        node = new_exp_array_node(exp_array->data_size, 1);
-        // add node to ll
+        node = new_exp_array_node(exp_array->data_size, VECTOR_INITIAL_SIZE);
         node = (ExpArrayNode*)linked_list_insert_end(exp_array->linked_list, node, sizeof(ExpArrayNode));
     } else if (node->count >= node->limit) {
-        // if node.count == limit
-        // alloc new node
-        node = new_exp_array_node(exp_array->data_size, 2 * node->limit);
-        // add node to ll
+        node = new_exp_array_node(exp_array->data_size, VECTOR_GROWTH_COEFFICIENT * node->limit);
         node = (ExpArrayNode*)linked_list_insert_end(exp_array->linked_list, node, sizeof(ExpArrayNode));
     }
 
-    // add item
-    memcpy(node->vector + (node->count * exp_array->data_size), data, exp_array->data_size);
+    memcpy(((char*)node->vector) + (node->count * exp_array->data_size), data, exp_array->data_size);
 
     node->count++;
-    // if node.count < limit
-    // add item
     return 0;
 }
 
-void exp_array_show(ExpArray* exp_array) {
+void exp_array_show(ExpArray* exp_array, void (*printer)(void* value)) {
     uint64_t position = 0;
     while (1) {
         ExpArrayNode* node = ((ExpArrayNode*)find_linked_list(exp_array->linked_list, position++));
@@ -79,7 +71,8 @@ void exp_array_show(ExpArray* exp_array) {
             break;
         }
         for (uint64_t i = 0; i < node->count; i++) {
-            printf("%d ", *((int*)node->vector + i));
+            // printf("%d ", *((int*)node->vector + i));
+            printer(((char*)node->vector) + (i * exp_array->data_size));
         }
         printf("\n");
     }
