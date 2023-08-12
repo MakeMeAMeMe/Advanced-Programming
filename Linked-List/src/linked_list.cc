@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "linked_list.h"
+
 struct LinkedList {
     uint64_t length;
     LinkedListNode *begin;
@@ -222,11 +224,11 @@ LinkedListNode *find_linked_list_from_end(LinkedList *linked_list, uint64_t posi
     return aux;
 }
 
-void *find_value_linked_list(LinkedList *linked_list, void *data,
-                             uint8_t (*comparator)(void *search_term, void *value)) {
+void *find_value_linked_list(LinkedList *linked_list, void *value,
+                             uint8_t (*comparator)(void *search_term, void *data)) {
     LinkedListNode *aux = linked_list->begin;
     while (aux != NULL) {
-        if (comparator(&data, aux->data)) {
+        if (comparator(&value, aux->data)) {
             return aux->data;
         }
         aux = aux->next;
@@ -256,4 +258,20 @@ uint64_t free_linked_list(LinkedList *linked_list) {
     }
     free(linked_list);
     return 0;
+}
+
+uint64_t linked_list_get_length(LinkedList *linked_list) { return linked_list->length; }
+
+void *linked_list_get_start(LinkedList *linked_list) {
+    if (linked_list->begin == NULL) {
+        return NULL;
+    }
+    return linked_list->begin->data;
+}
+
+void *linked_list_get_end(LinkedList *linked_list) {
+    if (linked_list->end == NULL) {
+        return NULL;
+    }
+    return linked_list->end->data;
 }

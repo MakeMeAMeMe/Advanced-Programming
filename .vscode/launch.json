@@ -2,12 +2,20 @@
     "version": "2.0.0",
     "configurations": [
         {
-            "name": "Debug",
+            "name": "Debug Linked List",
             "type": "cppdbg",
             "request": "launch",
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "build",
             "program": "./build/Linked-List/LinkedList"
+        },
+        {
+            "name": "Debug Exp Array",
+            "type": "cppdbg",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "build",
+            "program": "./build/Exponential-Allocated-Array/ExponentialAllocatedArray"
         }
     ]
 }
