@@ -19,12 +19,12 @@ struct LinkedListNode {
     // LinkedListNodeDataType data_type;
 };
 
-uint32_t _linked_list_insert_begin(LinkedList *linked_list, LinkedListNode *node);
-uint32_t _linked_list_insert_end(LinkedList *linked_list, LinkedListNode *node);
+LinkedListNode *_linked_list_insert_begin(LinkedList *linked_list, LinkedListNode *node);
+LinkedListNode *_linked_list_insert_end(LinkedList *linked_list, LinkedListNode *node);
 LinkedListNode *find_linked_list_from_end(LinkedList *linked_list, uint64_t position);
 LinkedListNode *find_linked_list_from_begin(LinkedList *linked_list, uint64_t position);
 LinkedListNode *_find_linked_list(LinkedList *linked_list, uint64_t position);
-uint32_t _linked_list_insert(LinkedList *linked_list, LinkedListNode *node, uint64_t position);
+LinkedListNode *_linked_list_insert(LinkedList *linked_list, LinkedListNode *node, uint64_t position);
 
 LinkedList *new_linked_list() {
     LinkedList *linked_list = (LinkedList *)malloc(sizeof(LinkedList));
@@ -47,31 +47,31 @@ LinkedListNode *new_linked_list_node(void *data, uint64_t data_size) {
         free(node);
         return NULL;
     }
-    memcpy(node->data, &data, data_size);
+    memcpy(node->data, data, data_size);
     node->next = NULL;
     node->previous = NULL;
     return node;
 }
 
-uint32_t linked_list_insert_begin(LinkedList *linked_list, void *data, uint64_t data_size) {
+void *linked_list_insert_begin(LinkedList *linked_list, void *data, uint64_t data_size) {
     LinkedListNode *node = new_linked_list_node(data, data_size);
     if (node == NULL) {
-        return 1;
+        return NULL;
     }
-    return _linked_list_insert_begin(linked_list, node);
+    return _linked_list_insert_begin(linked_list, node)->data;
 }
 
-uint32_t linked_list_insert_end(LinkedList *linked_list, void *data, uint64_t data_size) {
+void *linked_list_insert_end(LinkedList *linked_list, void *data, uint64_t data_size) {
     LinkedListNode *node = new_linked_list_node(data, data_size);
     if (node == NULL) {
-        return 1;
+        return NULL;
     }
-    return _linked_list_insert_end(linked_list, node);
+    return _linked_list_insert_end(linked_list, node)->data;
 }
 
-uint32_t linked_list_insert(LinkedList *linked_list, void *data, uint64_t data_size, uint64_t position) {
+void *linked_list_insert(LinkedList *linked_list, void *data, uint64_t data_size, uint64_t position) {
     if (position > linked_list->length) {
-        return 1;
+        return NULL;
     }
     if (position == 0) {
         return linked_list_insert_begin(linked_list, data, data_size);
@@ -82,12 +82,12 @@ uint32_t linked_list_insert(LinkedList *linked_list, void *data, uint64_t data_s
 
     LinkedListNode *node = new_linked_list_node(data, data_size);
     if (node == NULL) {
-        return 1;
+        return NULL;
     }
-    return _linked_list_insert(linked_list, node, position);
+    return _linked_list_insert(linked_list, node, position)->data;
 }
 
-uint32_t _linked_list_insert(LinkedList *linked_list, LinkedListNode *node, uint64_t position) {
+LinkedListNode *_linked_list_insert(LinkedList *linked_list, LinkedListNode *node, uint64_t position) {
     uint64_t counter = 0;
     LinkedListNode *aux = linked_list->begin;
     while (counter++ < position) {
@@ -104,10 +104,10 @@ uint32_t _linked_list_insert(LinkedList *linked_list, LinkedListNode *node, uint
 
     linked_list->length++;
 
-    return 0;
+    return node;
 }
 
-uint32_t _linked_list_insert_begin(LinkedList *linked_list, LinkedListNode *node) {
+LinkedListNode *_linked_list_insert_begin(LinkedList *linked_list, LinkedListNode *node) {
     node->previous = NULL;
     if (linked_list->begin == NULL) {
         // Empty list
@@ -118,7 +118,7 @@ uint32_t _linked_list_insert_begin(LinkedList *linked_list, LinkedListNode *node
 
         linked_list->length++;
 
-        return 0;
+        return node;
     }
 
     LinkedListNode *aux = linked_list->begin;
@@ -129,10 +129,10 @@ uint32_t _linked_list_insert_begin(LinkedList *linked_list, LinkedListNode *node
     aux->previous = node;
 
     linked_list->length++;
-    return 0;
+    return node;
 }
 
-uint32_t _linked_list_insert_end(LinkedList *linked_list, LinkedListNode *node) {
+LinkedListNode *_linked_list_insert_end(LinkedList *linked_list, LinkedListNode *node) {
     node->next = NULL;
     if (linked_list->end == NULL) {
         // Empty list
@@ -143,7 +143,7 @@ uint32_t _linked_list_insert_end(LinkedList *linked_list, LinkedListNode *node) 
 
         linked_list->length++;
 
-        return 0;
+        return node;
     }
 
     LinkedListNode *aux = linked_list->end;
@@ -154,14 +154,14 @@ uint32_t _linked_list_insert_end(LinkedList *linked_list, LinkedListNode *node) 
     aux->next = node;
     linked_list->length++;
 
-    return 0;
+    return node;
 }
 
-uint32_t linked_list_delete(LinkedList *linked_list, uint64_t position) {
+void *linked_list_delete(LinkedList *linked_list, uint64_t position) {
     LinkedListNode *node = _find_linked_list(linked_list, position);
 
     if (node == NULL) {
-        return 1;
+        return NULL;
     }
 
     LinkedListNode *prev = node->previous;
@@ -180,13 +180,13 @@ uint32_t linked_list_delete(LinkedList *linked_list, uint64_t position) {
     if (linked_list->end == node) {
         linked_list->end = prev;
     }
-
-    free(node->data);
+    void *data = node->data;
+    // free(node->data);
     free(node);
 
     linked_list->length--;
 
-    return 0;
+    return data;
 }
 
 void *find_linked_list(LinkedList *linked_list, uint64_t position) {
@@ -230,11 +230,11 @@ LinkedListNode *find_linked_list_from_end(LinkedList *linked_list, uint64_t posi
     return aux;
 }
 
-void *find_value_linked_list(LinkedList *linked_list, void *value,
+void *find_value_linked_list(LinkedList *linked_list, void *search_value,
                              uint8_t (*comparator)(void *search_term, void *data)) {
     LinkedListNode *aux = linked_list->begin;
     while (aux != NULL) {
-        if (comparator(&value, aux->data)) {
+        if (comparator(search_value, aux->data)) {
             return aux->data;
         }
         aux = aux->next;

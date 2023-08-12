@@ -8,10 +8,10 @@ TEST(LinkedListTest, InsertingAItemMakesAListNotEmpty) {
     void* finder = find_linked_list(linked_list, 0);
     printf("%p\n", finder);
     EXPECT_EQ(finder, (void*)NULL);
+    int data = 3;
+    int* result = (int*)linked_list_insert(linked_list, (void*)&data, sizeof(int), 0);
 
-    int result = linked_list_insert(linked_list, (void*)3, sizeof(int), 0);
-
-    EXPECT_EQ(result, 0);
+    EXPECT_EQ(*result, data);
 
     finder = find_linked_list(linked_list, 0);
     printf("%p\n", finder);

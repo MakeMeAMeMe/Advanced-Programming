@@ -18,23 +18,24 @@ int main(int argc, char const* argv[]) {
     int var_3 = -3;
 
     // add 3 elements
-    linked_list_insert(linked_list, (void*)&var_1, sizeof(int*), 0);
-    linked_list_insert(linked_list, (void*)&var_2, sizeof(int*), 0);
-    linked_list_insert(linked_list, (void*)&var_3, sizeof(int*), 0);
+    linked_list_insert(linked_list, (void*)&var_1, sizeof(int), 0);
+    linked_list_insert(linked_list, (void*)&var_2, sizeof(int), 0);
+    linked_list_insert(linked_list, (void*)&var_3, sizeof(int), 0);
 
     // find 2 of them
     for (size_t i = 0; i < 3; i++) {
-        int** data = (int**)find_linked_list(linked_list, i);
-        int aux = (int)(**data);
+        int* data = (int*)find_linked_list(linked_list, i);
+        int aux = (int)(*data);
         printf("Valor %lu: %d\n", i, aux);
     }
 
     for (size_t i = 0; i < 3; i++) {
-        int** data = (int**)find_value_linked_list(linked_list, (void*)(i + 1), comparator);
+        int search_value = i + 1;
+        int* data = (int*)find_value_linked_list(linked_list, (void*)&search_value, comparator);
         if (data == NULL) {
             continue;
         }
-        int aux = (int)(**data);
+        int aux = (int)(*data);
         printf("Valor %lu: %d\n", i, aux);
     }
 

@@ -47,26 +47,23 @@ ExpArrayNode* new_exp_array_node(uint64_t data_size, uint64_t limit) {
 }
 
 uint32_t exp_array_insert(ExpArray* exp_array, void* data) {
-    ExpArrayNode** node_reg = ((ExpArrayNode**)linked_list_get_end(exp_array->linked_list));
-    ExpArrayNode* node = NULL;
-    if (node_reg == NULL) {
+    ExpArrayNode* node = (ExpArrayNode*)linked_list_get_end(exp_array->linked_list);
+    if (node == NULL) {
         // if node == NULL, start process
         // alloc first node
         node = new_exp_array_node(exp_array->data_size, 1);
         // add node to ll
-        linked_list_insert_end(exp_array->linked_list, node, sizeof(ExpArrayNode*));
-    } else if ((*node_reg)->count >= (*node_reg)->limit) {
+        linked_list_insert_end(exp_array->linked_list, node, sizeof(ExpArrayNode));
+    } else if (node->count >= node->limit) {
         // if node.count == limit
         // alloc new node
-        node = new_exp_array_node(exp_array->data_size, 2 * (*node_reg)->limit);
+        node = new_exp_array_node(exp_array->data_size, 2 * node->limit);
         // add node to ll
-        linked_list_insert_end(exp_array->linked_list, node, sizeof(ExpArrayNode*));
-    } else {
-        node = *node_reg;
+        linked_list_insert_end(exp_array->linked_list, node, sizeof(ExpArrayNode));
     }
 
     // add item
-    memcpy(node->vector + node->count, &data, exp_array->data_size);
+    memcpy(node->vector + node->count, data, exp_array->data_size);
 
     node->count++;
     // if node.count < limit
@@ -77,13 +74,12 @@ uint32_t exp_array_insert(ExpArray* exp_array, void* data) {
 void exp_array_show(ExpArray* exp_array) {
     uint64_t position = 0;
     while (1) {
-        ExpArrayNode** node_reg = ((ExpArrayNode**)find_linked_list(exp_array->linked_list, position++));
-        if (node_reg == NULL) {
+        ExpArrayNode* node = ((ExpArrayNode*)find_linked_list(exp_array->linked_list, position++));
+        if (node == NULL) {
             break;
         }
-        ExpArrayNode* node = *node_reg;
         for (uint64_t i = 0; i < node->count; i++) {
-            printf("%d ", **((int**)node->vector + i));
+            printf("%d ", *((int*)node->vector + i));
         }
         printf("\n");
     }
