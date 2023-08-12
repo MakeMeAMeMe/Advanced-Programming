@@ -38,7 +38,7 @@ ExpArrayNode* new_exp_array_node(uint64_t data_size, uint64_t limit) {
     }
     exp_array_node->count = 0;
     exp_array_node->limit = limit;
-    exp_array_node->vector = (void*)(malloc(data_size * limit));
+    exp_array_node->vector = (void*)malloc(data_size * limit);
     if (exp_array_node->vector == NULL) {
         free(exp_array_node);
         return NULL;
@@ -72,4 +72,19 @@ uint32_t exp_array_insert(ExpArray* exp_array, void* data) {
     // if node.count < limit
     // add item
     return 0;
+}
+
+void exp_array_show(ExpArray* exp_array) {
+    uint64_t position = 0;
+    while (1) {
+        ExpArrayNode** node_reg = ((ExpArrayNode**)find_linked_list(exp_array->linked_list, position++));
+        if (node_reg == NULL) {
+            break;
+        }
+        ExpArrayNode* node = *node_reg;
+        for (uint64_t i = 0; i < node->count; i++) {
+            printf("%d ", *((int*)node->vector + i));
+        }
+        printf("\n");
+    }
 }

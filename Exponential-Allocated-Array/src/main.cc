@@ -7,5 +7,7 @@ int main(int argc, char const* argv[]) {
     exp_array_insert(exp_array, (void*)3);
     exp_array_insert(exp_array, (void*)2);
     exp_array_insert(exp_array, (void*)1);
+
+    exp_array_show(exp_array);
     return 0;
 }
