@@ -205,6 +205,9 @@ LinkedListNode *_find_linked_list(LinkedList *linked_list, uint64_t position) {
 }
 
 LinkedListNode *find_linked_list_from_begin(LinkedList *linked_list, uint64_t position) {
+    if (position >= linked_list->length) {
+        return NULL;
+    }
     LinkedListNode *aux = linked_list->begin;
 
     uint64_t counter = 0;
@@ -215,6 +218,9 @@ LinkedListNode *find_linked_list_from_begin(LinkedList *linked_list, uint64_t po
 }
 
 LinkedListNode *find_linked_list_from_end(LinkedList *linked_list, uint64_t position) {
+    if (position >= linked_list->length) {
+        return NULL;
+    }
     LinkedListNode *aux = linked_list->end;
 
     uint64_t counter = linked_list->length - 1;

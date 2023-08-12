@@ -83,7 +83,7 @@ void exp_array_show(ExpArray* exp_array) {
         }
         ExpArrayNode* node = *node_reg;
         for (uint64_t i = 0; i < node->count; i++) {
-            printf("%d ", *((int*)node->vector + i));
+            printf("%d ", **((int**)node->vector + i));
         }
         printf("\n");
     }

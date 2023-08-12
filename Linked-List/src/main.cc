@@ -13,24 +13,28 @@ int main(int argc, char const* argv[]) {
     // instantiate a list
     LinkedList* linked_list = new_linked_list();
 
+    int var_1 = 1;
+    int var_2 = 2;
+    int var_3 = -3;
+
     // add 3 elements
-    linked_list_insert(linked_list, (void*)1, sizeof(int), 0);
-    linked_list_insert(linked_list, (void*)2, sizeof(int), 0);
-    linked_list_insert(linked_list, (void*)-3, sizeof(int), 0);
+    linked_list_insert(linked_list, (void*)&var_1, sizeof(int*), 0);
+    linked_list_insert(linked_list, (void*)&var_2, sizeof(int*), 0);
+    linked_list_insert(linked_list, (void*)&var_3, sizeof(int*), 0);
 
     // find 2 of them
     for (size_t i = 0; i < 3; i++) {
-        int* data = (int*)find_linked_list(linked_list, i);
-        int aux = (int)(*data);
+        int** data = (int**)find_linked_list(linked_list, i);
+        int aux = (int)(**data);
         printf("Valor %lu: %d\n", i, aux);
     }
 
     for (size_t i = 0; i < 3; i++) {
-        int* data = (int*)find_value_linked_list(linked_list, (void*)(i + 1), comparator);
+        int** data = (int**)find_value_linked_list(linked_list, (void*)(i + 1), comparator);
         if (data == NULL) {
             continue;
         }
-        int aux = (int)(*data);
+        int aux = (int)(**data);
         printf("Valor %lu: %d\n", i, aux);
     }
 
@@ -40,7 +44,7 @@ int main(int argc, char const* argv[]) {
     linked_list_delete(linked_list, 0);
 
     for (size_t i = 0; i < 3; i++) {
-        void* aux = (int*)find_linked_list(linked_list, i);
+        void* aux = (int**)find_linked_list(linked_list, i);
         printf("Valor %lu: %p\n", i, aux);
     }
 
