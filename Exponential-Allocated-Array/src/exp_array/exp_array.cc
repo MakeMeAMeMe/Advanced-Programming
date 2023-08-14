@@ -48,13 +48,18 @@ ExpArrayNode* new_exp_array_node(uint64_t data_size, uint64_t limit) {
 #define VECTOR_INITIAL_SIZE 1
 #define VECTOR_GROWTH_COEFFICIENT 2
 uint32_t exp_array_insert(ExpArray* exp_array, void* data) {
-    ExpArrayNode* node = (ExpArrayNode*)linked_list_get_end(exp_array->linked_list);
-    if (node == NULL) {
-        node = new_exp_array_node(exp_array->data_size, VECTOR_INITIAL_SIZE);
-        node = (ExpArrayNode*)linked_list_insert_end(exp_array->linked_list, node, sizeof(ExpArrayNode));
-    } else if (node->count >= node->limit) {
-        node = new_exp_array_node(exp_array->data_size, VECTOR_GROWTH_COEFFICIENT * node->limit);
-        node = (ExpArrayNode*)linked_list_insert_end(exp_array->linked_list, node, sizeof(ExpArrayNode));
+    ExpArrayNode* aux = (ExpArrayNode*)linked_list_get_end(exp_array->linked_list);
+    ExpArrayNode* node = NULL;
+    if (aux == NULL) {
+        aux = new_exp_array_node(exp_array->data_size, VECTOR_INITIAL_SIZE);
+        node = (ExpArrayNode*)linked_list_insert_end(exp_array->linked_list, aux, sizeof(ExpArrayNode));
+        free(aux);
+    } else if (aux->count >= aux->limit) {
+        aux = new_exp_array_node(exp_array->data_size, VECTOR_GROWTH_COEFFICIENT * aux->limit);
+        node = (ExpArrayNode*)linked_list_insert_end(exp_array->linked_list, aux, sizeof(ExpArrayNode));
+        free(aux);
+    } else {
+        node = aux;
     }
 
     memcpy(((char*)node->vector) + (node->count * exp_array->data_size), data, exp_array->data_size);
